@@ -1,11 +1,28 @@
 from src.Domain.seller import SellerDomain
 from src.Infrastructure.Model.seller import Seller
 from src.config.data_base import db
+from sqlalchemy import or_
 
 class SellerService:
     @staticmethod
     def create_seller(name, email, password, cnpj, phone):
         new_seller = SellerDomain(name, email, password, cnpj, phone)
+
+        existing_seller = Seller.query.filter(
+            or_(
+                Seller.cnpj == cnpj,
+                Seller.email == email,
+                Seller.phone == phone
+            )
+        ).first()
+        if existing_seller:
+            if existing_seller.cnpj == cnpj:
+                raise ValueError("CNPJ já cadastrado")
+            elif existing_seller.email == email:
+                raise ValueError("Email já cadastrado")
+            elif existing_seller.phone == phone:
+                raise ValueError("Telefone já cadastrado")
+
         seller = Seller(
             name=new_seller.name,
             email=new_seller.email,

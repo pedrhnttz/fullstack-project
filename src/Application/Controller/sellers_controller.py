@@ -5,14 +5,18 @@ class SellerController:
     @staticmethod
     def register_seller():
         data = request.get_json()
-        name = data.get('name')
-        email = data.get('email')
-        password = data.get('password')
-        cnpj = data.get('cnpj')
-        phone = data.get('phone')
-        if not name or not email or not password or not cnpj or not phone:
-            return make_response(jsonify({"erro": "Missing required fields"}), 400)
-        seller = SellerService.create_seller(name, email, password, cnpj, phone)
+
+        try:
+            seller = SellerService.create_seller(
+                name = data.get('name'),
+                email = data.get('email'),
+                password = data.get('password'),
+                cnpj = data.get('cnpj'),
+                phone = data.get('phone')
+            )
+        except ValueError as e:
+            return make_response(jsonify({"erro": str(e)}), 400)
+
         return make_response(jsonify({
             "msg": "Seller salvo com sucesso",
             "seller": seller.to_dict()
