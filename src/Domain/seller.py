@@ -1,7 +1,7 @@
 class SellerDomain:
-    def __init__(self, name, email, password, cnpj, phone):
+    def __init__(self, name, email, password, cnpj, phone, token):
 
-        if not all([name, email, password, cnpj, phone]):
+        if not all([name, email, password, cnpj, phone, token]):
             raise ValueError("Missing required fields")
         
         if not cnpj.isdigit() or len(cnpj) != 14:
@@ -16,6 +16,7 @@ class SellerDomain:
         self.cnpj = cnpj
         self.phone = phone
         self.status = "Inactive"
+        self.token = token
 
     def to_dict(self):
         return {
@@ -24,6 +25,7 @@ class SellerDomain:
             "password": self.password,
             "cnpj": self.cnpj,
             "phone": self.phone,
-            "status": self.status
+            "status": self.status,
+            "token": self.token
         }
     

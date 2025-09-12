@@ -9,6 +9,7 @@ class Seller(db.Model):
     cnpj = db.Column(db.String(14), unique=True, nullable=False)
     phone = db.Column(db.String(11), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="Inactive")
+    token = db.Column(db.String(11), nullable=False)
 
     def to_dict(self):
         return {
@@ -18,5 +19,6 @@ class Seller(db.Model):
             "password": self.password,
             "cnpj": self.cnpj,
             "phone": self.phone,
-            "status": self.status
+            "status": self.status,
+            "token": self.token
         }

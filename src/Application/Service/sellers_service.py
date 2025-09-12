@@ -1,12 +1,14 @@
 from src.Domain.seller import SellerDomain
 from src.Infrastructure.Model.seller import Seller
+from src.Infrastructure.http.whatsapp import WhatsApp
 from src.config.data_base import db
 from sqlalchemy import or_
 
 class SellerService:
     @staticmethod
     def create_seller(name, email, password, cnpj, phone):
-        new_seller = SellerDomain(name, email, password, cnpj, phone)
+        token = WhatsApp.whatsApp()
+        new_seller = SellerDomain(name, email, password, cnpj, phone, token)
 
         existing_seller = Seller.query.filter(
             or_(
@@ -29,7 +31,8 @@ class SellerService:
             password=new_seller.password,
             cnpj=new_seller.cnpj,
             phone=new_seller.phone,
-            status=new_seller.status
+            status=new_seller.status,
+            token=new_seller.token
         )
         db.session.add(seller)
         db.session.commit()
@@ -49,7 +52,23 @@ class SellerService:
     def update_seller(id, data):
         seller = Seller.query.get(id)
         if not seller:
-            return None
+            raise Exception("Seller não encontrado")
+        
+        existing_seller = Seller.query.filter(
+            or_(
+                Seller.cnpj == data.get("cnpj") and Seller.id != id,
+                Seller.email == data.get("email") and Seller.id != id,
+                Seller.phone == data.get("email") and Seller.id != id
+            )
+        ).first()
+        if existing_seller:
+            if existing_seller.cnpj == data.get("cnpj"):
+                raise ValueError("Este CNPJ pertence à outro usuário")
+            elif existing_seller.email == data.get("email"):
+                raise ValueError("Este Email pertence à outro usuário")
+            elif existing_seller.phone == data.get("phone"):
+                raise ValueError("Este Telefone pertence à outro usuário")
+
         seller.name = data.get("name", seller.name)
         seller.email = data.get("email", seller.email)
         seller.password = data.get("password", seller.password)

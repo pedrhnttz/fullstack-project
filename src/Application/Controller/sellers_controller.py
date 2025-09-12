@@ -37,9 +37,11 @@ class SellerController:
     @staticmethod
     def update_seller(id):
         data = request.get_json()
-        seller = SellerService.update_seller(id, data)
-        if not seller:
-            return make_response(jsonify({"erro": "Seller não encontrado"}), 404)
+        try:
+            seller = SellerService.update_seller(id, data)
+        except Exception as e:
+            return make_response(jsonify({"erro": str(e)}), 404)
+        
         return make_response(jsonify({
             "msg": "Seller atualizado com sucesso",
             "seller": seller.to_dict()
