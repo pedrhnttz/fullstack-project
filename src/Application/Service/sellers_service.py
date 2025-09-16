@@ -7,7 +7,7 @@ from sqlalchemy import or_
 class SellerService:
     @staticmethod
     def create_seller(name, email, password, cnpj, phone):
-        token = WhatsApp.whatsApp()
+        token = WhatsApp.criacao_token()
         new_seller = SellerDomain(name, email, password, cnpj, phone, token)
 
         existing_seller = Seller.query.filter(
@@ -36,6 +36,9 @@ class SellerService:
         )
         db.session.add(seller)
         db.session.commit()
+
+        WhatsApp.envia_codigo_whatsapp(token, phone)
+
         return seller
     
     @staticmethod
