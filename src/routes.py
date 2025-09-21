@@ -23,3 +23,7 @@ def init_routes(app):
     @app.route('/sellers/<id>', methods=['PUT'])
     def update_seller_route(id):
         return SellerController.update_seller(id)
+    
+    @app.route('/sellers/<cpnj>/code', methods=['PUT'])
+    def confirm_seller(cnpj, code):
+        return SellerController.confirm_user(cnpj, code)
