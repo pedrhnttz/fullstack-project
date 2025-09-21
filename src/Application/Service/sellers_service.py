@@ -87,5 +87,7 @@ class SellerService:
             raise Exception("Seller não encontrado")
         if seller.code != code:
             raise Exception("Código inválido")
-        db.session.commit
+        if seller.status == "Inactive":
+            seller.status = "Active"
+        db.session.commit()
         return seller
