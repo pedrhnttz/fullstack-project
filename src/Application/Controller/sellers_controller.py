@@ -46,3 +46,14 @@ class SellerController:
             "msg": "Seller atualizado com sucesso",
             "seller": seller.to_dict()
         }), 200)
+    
+    @staticmethod
+    def confirm_seller(cnpj, code):
+        try:
+            seller = SellerService.confirm_seller(cnpj,code)
+            return make_response(jsonify({
+                "msg":"Conta verificada com sucesso",
+                "seller": seller.to_dict()
+                }), 200)
+        except Exception as e:
+            return make_response(jsonify({"erro": str(e)}), 400)

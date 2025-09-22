@@ -79,3 +79,15 @@ class SellerService:
         seller.phone = data.get("phone", seller.phone)
         db.session.commit()
         return seller
+    
+    @staticmethod
+    def confirm_seller(cnpj,code):
+        seller = Seller.query.get(cnpj)
+        if not seller:
+            raise Exception("Seller não encontrado")
+        if seller.code != code:
+            raise Exception("Código inválido")
+        if seller.status == "Inactive":
+            seller.status = "Active"
+        db.session.commit()
+        return seller
