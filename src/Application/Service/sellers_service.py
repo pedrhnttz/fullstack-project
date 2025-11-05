@@ -2,7 +2,9 @@ from src.Domain.seller import SellerDomain
 from src.Infrastructure.Model.seller import Seller
 from src.Infrastructure.http.whatsapp import WhatsApp
 from src.config.data_base import db
+from src.config.security import hash_password, verify_password
 from sqlalchemy import or_
+from flask_jwt_extended import create_access_token
 
 class SellerService:
     @staticmethod
@@ -57,37 +59,48 @@ class SellerService:
         if not seller:
             raise Exception("Seller não encontrado")
         
-        existing_seller = Seller.query.filter(
-            or_(
-                Seller.cnpj == data.get("cnpj") and Seller.id != id,
-                Seller.email == data.get("email") and Seller.id != id,
-                Seller.phone == data.get("email") and Seller.id != id
-            )
-        ).first()
-        if existing_seller:
-            if existing_seller.cnpj == data.get("cnpj"):
-                raise ValueError("Este CNPJ pertence à outro usuário")
-            elif existing_seller.email == data.get("email"):
-                raise ValueError("Este Email pertence à outro usuário")
-            elif existing_seller.phone == data.get("phone"):
-                raise ValueError("Este Telefone pertence à outro usuário")
+        password = data.get("password")
+        if password:
+            new_password = hash_password(password)
+            seller.password = new_password
 
         seller.name = data.get("name", seller.name)
         seller.email = data.get("email", seller.email)
-        seller.password = data.get("password", seller.password)
         seller.cnpj = data.get("cnpj", seller.cnpj)
         seller.phone = data.get("phone", seller.phone)
         db.session.commit()
         return seller
     
     @staticmethod
-    def confirm_seller(cnpj,code):
-        seller = Seller.query.get(cnpj)
+    def confirm_seller(cnpj, code):
+        seller = Seller.query.get(cnpj==cnpj)
         if not seller:
             raise Exception("Seller não encontrado")
-        if seller.code != code:
+        if seller.token != code:
             raise Exception("Código inválido")
         if seller.status == "Inactive":
             seller.status = "Active"
         db.session.commit()
         return seller
+    
+    @staticmethod
+    def deactivate_seller(cnpj):
+        seller = Seller.query.get(cnpj==cnpj)
+        if not seller:
+            raise Exception("Seller não encontrado")
+        if seller.status == "Inactive":
+            raise Exception("Seller já está desativado")
+        else:
+            seller.status = "Inactive"
+        db.session.commit()
+        return seller
+    
+    @staticmethod
+    def login(email, password):
+        seller = Seller.query.get(email==email)
+        if not seller:
+            raise Exception("Seller não encontrado")
+        if not seller.check_password(password):
+            raise Exception("Senha incorreta")
+        access_token = create_access_token(identity=email)
+        return access_token

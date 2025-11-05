@@ -1,4 +1,5 @@
 from src.config.data_base import db
+from ...config.security import hash_password, verify_password
 
 class Seller(db.Model):
     __tablename__ = 'sellers'
@@ -22,3 +23,6 @@ class Seller(db.Model):
             "status": self.status,
             "token": self.token
         }
+    
+    def check_password(self, password: str) -> bool:
+        return verify_password(self.password, password)

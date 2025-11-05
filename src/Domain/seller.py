@@ -1,3 +1,5 @@
+from ..config.security import hash_password, verify_password
+
 class SellerDomain:
     def __init__(self, name, email, password, cnpj, phone, token):
 
@@ -12,7 +14,7 @@ class SellerDomain:
 
         self.name = name
         self.email = email
-        self.password = password
+        self.password = hash_password(password)
         self.cnpj = cnpj
         self.phone = phone
         self.status = "Inactive"
@@ -29,3 +31,5 @@ class SellerDomain:
             "token": self.token
         }
     
+    def check_password(self, password: str) -> bool:
+        return verify_password(self.password, password)

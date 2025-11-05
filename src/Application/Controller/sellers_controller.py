@@ -48,12 +48,36 @@ class SellerController:
         }), 200)
     
     @staticmethod
-    def confirm_seller(cnpj, code):
+    def auth_seller(cnpj, code):
         try:
-            seller = SellerService.confirm_seller(cnpj,code)
+            seller = SellerService.confirm_seller(cnpj, code)
             return make_response(jsonify({
                 "msg":"Conta verificada com sucesso",
                 "seller": seller.to_dict()
                 }), 200)
         except Exception as e:
             return make_response(jsonify({"erro": str(e)}), 400)
+        
+    @staticmethod
+    def deactivate_seller(cnpj):
+        try:
+            seller = SellerService.deactivate_seller(cnpj)
+            return make_response(jsonify({
+                "msg": "Usuário desativado com sucesso",
+                "seller": seller.to_dict()
+            }))
+        except Exception as e:
+            return make_response(jsonify({"erro": str(e)}), 400)
+        
+    @staticmethod
+    def login():
+        try:
+            email = request.json.get("email", None)
+            password = request.json.get("password", None)
+            access_token = SellerService.login(email, password)
+            return make_response(jsonify({
+                "msg": "Login efetuado com sucesso",
+                "access_token": access_token
+            }))
+        except Exception as e:
+            return make_response(jsonify({"erro": str(e)}), 401)
