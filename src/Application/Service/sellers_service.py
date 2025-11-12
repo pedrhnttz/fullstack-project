@@ -68,6 +68,7 @@ class SellerService:
         seller.email = data.get("email", seller.email)
         seller.cnpj = data.get("cnpj", seller.cnpj)
         seller.phone = data.get("phone", seller.phone)
+        seller.status = data.get("status", seller.phone)
         db.session.commit()
         return seller
     
