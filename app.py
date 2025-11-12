@@ -6,11 +6,14 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
-    app.config["JWT_SECRET_KEY"] = "plt" 
+    CORS(app, supports_credentials=True)
+
+    app.config["JWT_SECRET_KEY"] = "plt"
+    
     jwt = JWTManager(app)
     init_db(app)
     init_routes(app)
+
     return app
 
 
