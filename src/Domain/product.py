@@ -4,7 +4,7 @@ class ProductDomain:
         self.preco = preco
         self.quantidade = quantidade
         self.image_url = image_url
-        self.status = "Inactive"
+        self.status = "Active"
 
     def to_dict(self):
         return {

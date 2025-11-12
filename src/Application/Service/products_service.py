@@ -35,13 +35,13 @@ class ProductService:
         return products
     
     @staticmethod
-    def get_product_by_id(name):
+    def get_product_by_name(name):
         product = Product.query.get(name)
         return product
     
     @staticmethod
-    def update_product(id, data):
-        product = Product.query.get(id)
+    def update_product(name, data):
+        product = Product.query.get(name)
         if not product:
             raise Exception("Produto não encontrado")
         product.name = data.get("name", product.name)

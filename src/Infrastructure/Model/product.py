@@ -7,7 +7,7 @@ class Product(db.Model):
     preco = db.Column(db.Float, nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(255), nullable=True)
-    status = db.Column(db.String(20), nullable=False, default="Inactive")
+    status = db.Column(db.String(20), nullable=False, default="Active")
 
     def to_dict(self):
         return{
