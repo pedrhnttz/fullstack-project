@@ -5,8 +5,8 @@ from sqlalchemy import or_
 
 class ProductService:
     @staticmethod
-    def create_product(name, preco, quantidade, image_url):
-        new_product = ProductDomain(name, preco, quantidade, image_url)
+    def create_product(name, price, qty, image_url, seller_id):
+        new_product = ProductDomain(name, price, qty, image_url)
 
         existing_product = Product.query.filter(
             or_(
@@ -19,10 +19,11 @@ class ProductService:
         
         product = Product(
             name = new_product.name,
-            preco = new_product.preco,
-            quantidade = new_product.quantidade,
+            price = new_product.price,
+            qty = new_product.qty,
             image_url = new_product.image_url,
-            status = new_product.status
+            status = new_product.status,
+            seller_id=seller_id
         )
         db.session.add(product)
         db.session.commit()
@@ -35,18 +36,24 @@ class ProductService:
         return products
     
     @staticmethod
-    def get_product_by_name(name):
-        product = Product.query.get(name)
+    def get_product_by_id(id):
+        product = Product.query.get(id)
         return product
     
     @staticmethod
-    def update_product(name, data):
-        product = Product.query.get(name)
+    def get_product_by_seller_id(seller_id):
+        products = Product.query.filter_by(seller_id=seller_id)
+        return products
+    
+    @staticmethod
+    def update_product(id, data):
+        product = Product.query.get(id)
         if not product:
             raise Exception("Produto não encontrado")
+        
         product.name = data.get("name", product.name)
-        product.preco = data.get("preco", product.preco)
-        product.quantidade = data.get("quantidade", product.quantidade)
+        product.price = data.get("price", product.price)
+        product.qty = data.get("qty", product.qty)
         product.image_url = data.get("image_url", product.image_url)
         product.status = data.get("status", product.status)
         db.session.commit()

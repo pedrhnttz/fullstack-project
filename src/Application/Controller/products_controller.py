@@ -9,9 +9,10 @@ class ProductController:
         try:
             product = ProductService.create_product(
                 name = data.get('name'),
-                preco = data.get('preco'),
-                quantidade = data.get('quantidade'),
-                image_url = data.get('image_url')
+                price = data.get('price'),
+                qty = data.get('qty'),
+                image_url = data.get('image_url'),
+                seller_id=data.get('seller_id')
             )
         except ValueError as e:
             return make_response(jsonify({"erro": str(e)}), 400)
@@ -27,17 +28,22 @@ class ProductController:
         return make_response(jsonify([product.to_dict() for product in products]), 200)
     
     @staticmethod
-    def get_product_by_name(name):
-        product = ProductService.get_product_by_name(name)
+    def get_product_by_id(id):
+        product = ProductService.get_product_by_id(id)
         if not product:
             return make_response(jsonify({"erro": "Product não encontrado"}), 400)
         return make_response(jsonify(product.to_dict()), 200)
+    
+    @staticmethod
+    def get_product_by_seller(seller_id):
+        products = ProductService.get_product_by_seller_id(seller_id)
+        return make_response(jsonify([product.to_dict() for product in products]), 200)
 
     @staticmethod
-    def update_product(name):
+    def update_product(id):
         data = request.get_json()
         try:
-            product = ProductService.update_product(name, data)
+            product = ProductService.update_product(id, data)
         except Exception as e:
             return make_response(jsonify({"erro": str(e)}), 404)
         
