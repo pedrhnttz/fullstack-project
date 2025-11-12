@@ -18,7 +18,5 @@ def init_db(app):
 
     db.init_app(app)
 
-    if os.getenv("FLASK_ENV") == "development":
-        with app.app_context():
-            db.create_all()
+    os.environ["DATABASE_URL"] = DATABASE_URL
 
