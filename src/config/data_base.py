@@ -15,6 +15,8 @@ DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
 db = SQLAlchemy()
 
 def init_db(app):
+    global DATABASE_URL
+
     if DATABASE_URL and "psycopg2" in DATABASE_URL:
         DATABASE_URL = DATABASE_URL.replace("psycopg2", "psycopg")
 
