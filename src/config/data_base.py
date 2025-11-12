@@ -11,7 +11,7 @@ def init_db(app):
 
     load_dotenv()
 
-    DATABASE_URL = os.getenv("SUPABASE_URL")
+    DATABASE_URL = os.getenv("DATABASE_URL")
 
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -23,5 +23,5 @@ def init_db(app):
         create_database(engine.url)
 
     with app.app_context():
-        #db.drop_all()
+        db.drop_all()
         db.create_all()
