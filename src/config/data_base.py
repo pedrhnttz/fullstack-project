@@ -1,27 +1,24 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
-from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, create_database
-from dotenv import load_dotenv
 import os
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db = SQLAlchemy()
 
 def init_db(app):
+    DATABASE_URL = os.getenv("DATABASE_URL")
 
-    load_dotenv()
+    if DATABASE_URL and "psycopg2" in DATABASE_URL:
+        DATABASE_URL = DATABASE_URL.replace("psycopg2", "psycopg")
 
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
 
-    engine = create_engine(DATABASE_URL)
-    if not database_exists(engine.url):
-        create_database(engine.url)
+    if os.getenv("FLASK_ENV") == "development":
+        with app.app_context():
+            db.create_all()
 
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
