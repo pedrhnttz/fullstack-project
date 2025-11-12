@@ -1,33 +1,33 @@
-from src.Domain.seller import ProductDomain
+from src.Domain.product import ProductDomain
 from src.Infrastructure.Model.product import Product
 from src.config.data_base import db
 from sqlalchemy import or_
 
 class ProductService:
     @staticmethod
-    def create_product(name, preco, quantidade, image_url)
-    new_product = ProductDomain(name, preco, quantidade, image_url)
+    def create_product(name, preco, quantidade, image_url):
+        new_product = ProductDomain(name, preco, quantidade, image_url)
 
-    existing_product = Product.query.filter(
-        or_(
-            Product.name == name
+        existing_product = Product.query.filter(
+            or_(
+                Product.name == name
+            )
+        ).first()
+        if existing_product:
+            if existing_product.name == name:
+                raise ValueError("Nome de produto já cadastrado")
+        
+        product = Product(
+            name = new_product.name,
+            preco = new_product.preco,
+            quantidade = new_product.quantidade,
+            image_url = new_product.image_url,
+            status = new_product.status
         )
-    ).first()
-    if existing_product:
-        if existing_product.name == name:
-            raise ValueError("Nome de produto já cadastrado")
-    
-    product = Product(
-        name = new_product.name,
-        preco = new_product.preco,
-        quantidade = new_product.quantidade,
-        image_url = new_product.image_url,
-        status = new_product.status
-    )
-    db.session.add(product)
-    db.session.commit()
+        db.session.add(product)
+        db.session.commit()
 
-    return product
+        return product
 
     @staticmethod
     def get_all_products():
