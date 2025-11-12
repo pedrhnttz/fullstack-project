@@ -74,7 +74,7 @@ class SellerService:
     
     @staticmethod
     def confirm_seller(cnpj, code):
-        seller = Seller.query.get(cnpj==cnpj)
+        seller = Seller.query.filter_by(cnpj=cnpj).first()
         if not seller:
             raise Exception("Seller não encontrado")
         if seller.token != code:
@@ -86,7 +86,7 @@ class SellerService:
     
     @staticmethod
     def deactivate_seller(cnpj):
-        seller = Seller.query.get(cnpj==cnpj)
+        seller = Seller.query.filter_by(cnpj=cnpj).first()
         if not seller:
             raise Exception("Seller não encontrado")
         if seller.status == "Inactive":
@@ -98,9 +98,11 @@ class SellerService:
     
     @staticmethod
     def login(email, password):
-        seller = Seller.query.get(email==email)
+        seller = Seller.query.filter_by(email=email).first()
         if not seller:
             raise Exception("Seller não encontrado")
+        if seller.status == "Inactive":
+            raise Exception("Usuário Inativo")
         if not seller.check_password(password):
             raise Exception("Senha incorreta")
         access_token = create_access_token(identity=email)
