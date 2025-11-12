@@ -1,4 +1,5 @@
 from src.Application.Controller.sellers_controller import SellerController
+from src.Application.Controller.products_controller import ProductController
 from flask import jsonify, make_response
 
 def init_routes(app):
@@ -35,3 +36,24 @@ def init_routes(app):
     @app.route('/login', methods=['POST'])
     def login_route():
         return SellerController.login()
+
+    @app.route('/products', methods=['POST'])
+    def register_product_route():
+        return ProductController.register_product()
+
+    @app.route('/products', methods=['GET'])
+    def get_products_route():
+        return ProductController.get_all_products()
+    
+    @app.route('/products/<name>', methods=['GET'])
+    def get_product_by_name_route(name):
+        return ProductController.get_product_by_name(name)
+    
+    @app.route('/products/<name>', methods=['PUT'])
+    def update_product_route(name):
+        return ProductController.update_product(name)
+
+    @app.route('/products/deactivate/<name>', methods=['PUT'])
+    def deactivate_product_route(name):
+        return ProductController.deactivate_product(name)
+        
