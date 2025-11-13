@@ -9,13 +9,7 @@ db = SQLAlchemy()
 def init_db(app):
     os.environ.pop("DATABASE_URL", None)
     
-    USER = os.getenv("user")
-    PASSWORD = os.getenv("password")
-    HOST = os.getenv("host")
-    PORT = os.getenv("port")
-    DBNAME = os.getenv("dbname")
-
-    DATABASE_URL = f"postgresql://postgres.zooeqwjwksqmxycxsima:{PASSWORD}@aws-1-us-east-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
+    DATABASE_URL = os.getenv("dburl")
 
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
