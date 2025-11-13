@@ -15,7 +15,7 @@ def init_db(app):
     PORT = os.getenv("port")
     DBNAME = os.getenv("dbname")
 
-    DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
+    DATABASE_URL = f"postgresql://postgres.zooeqwjwksqmxycxsima:{PASSWORD}@aws-1-us-east-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
 
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
