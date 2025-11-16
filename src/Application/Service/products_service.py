@@ -6,25 +6,28 @@ from sqlalchemy import or_
 class ProductService:
     @staticmethod
     def create_product(name, price, qty, image_url, seller_id):
+
+        # Domínio do produto
         new_product = ProductDomain(name, price, qty, image_url)
 
+        # Verifica duplicação de nome
         existing_product = Product.query.filter(
-            or_(
-                Product.name == name
-            )
+            or_(Product.name == name)
         ).first()
+
         if existing_product:
-            if existing_product.name == name:
-                raise ValueError("Nome de produto já cadastrado")
-        
+            raise ValueError("Nome de produto já cadastrado")
+
+        # Cria o produto no banco
         product = Product(
-            name = new_product.name,
-            price = new_product.price,
-            qty = new_product.qty,
-            image_url = new_product.image_url,
-            status = new_product.status,
+            name=new_product.name,
+            price=new_product.price,
+            qty=new_product.qty,
+            image_url=new_product.image_url,
+            status=new_product.status,
             seller_id=seller_id
         )
+
         db.session.add(product)
         db.session.commit()
 
