@@ -49,8 +49,8 @@ class SellerService:
         return sellers
     
     @staticmethod
-    def get_seller_by_id(id):
-        seller = Seller.query.get(id)
+    def get_seller_by_email(email):
+        seller = Seller.query.filter_by(email=email).first()
         return seller
     
     @staticmethod

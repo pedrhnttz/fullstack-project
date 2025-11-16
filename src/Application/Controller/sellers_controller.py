@@ -28,8 +28,8 @@ class SellerController:
         return make_response(jsonify([seller.to_dict() for seller in sellers]), 200)
     
     @staticmethod
-    def get_seller_by_id(id):
-        seller = SellerService.get_seller_by_id(id)
+    def get_seller_by_email(email):
+        seller = SellerService.get_seller_by_email(email)
         if not seller:
             return make_response(jsonify({"erro": "Seller não encontrado"}), 404)
         return make_response(jsonify(seller.to_dict()), 200)

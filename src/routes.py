@@ -20,9 +20,9 @@ def init_routes(app):
     def get_sellers_route():
         return SellerController.get_all_sellers()
     
-    @app.route('/sellers/<id>', methods=['GET'])
-    def get_seller_by_id_route(id):
-        return SellerController.get_seller_by_id(id)
+    @app.route('/sellers/<email>', methods=['GET'])
+    def get_seller_by_email_route(email):
+        return SellerController.get_seller_by_email(email)
     
     @app.route('/sellers/<id>', methods=['PUT'])
     def update_seller_route(id):
