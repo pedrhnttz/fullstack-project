@@ -1,6 +1,7 @@
 from src.Application.Controller.sellers_controller import SellerController
 from src.Application.Controller.products_controller import ProductController
 from src.Application.Controller.sales_controller import SaleController
+from flask import send_from_directory
 from flask import jsonify, make_response
 
 def init_routes(app):
@@ -9,6 +10,12 @@ def init_routes(app):
         return make_response(jsonify({
             "mensagem": "API - OK; Docker - Up",
         }), 200)
+
+    # U P L O A D #################################################################################
+
+    @app.route('/uploads/<path:filename>')
+    def uploaded_file(filename):
+        return send_from_directory('uploads', filename)
     
     # S E L L E R S ###############################################################################
     
