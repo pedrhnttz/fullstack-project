@@ -1,5 +1,6 @@
 from src.Domain.product import ProductDomain
 from src.Infrastructure.Model.product import Product
+from src.Infrastructure.Model.sales import Sale
 from src.config.data_base import db
 from sqlalchemy import or_
 
@@ -7,10 +8,8 @@ class ProductService:
     @staticmethod
     def create_product(name, price, qty, image_url, seller_id):
 
-        # Domínio do produto
         new_product = ProductDomain(name, price, qty, image_url)
 
-        # Verifica duplicação de nome
         existing_product = Product.query.filter(
             or_(Product.name == name)
         ).first()
@@ -18,7 +17,6 @@ class ProductService:
         if existing_product:
             raise ValueError("Nome de produto já cadastrado")
 
-        # Cria o produto no banco
         product = Product(
             name=new_product.name,
             price=new_product.price,
@@ -71,4 +69,15 @@ class ProductService:
             raise Exception("Produto já está desativado")
         else:
             product.status = "Inactive"
+        db.session.commit()
+
+    @staticmethod
+    def delete_product(id):
+        product = Product.query.get(id)
+        if not product:
+            raise Exception("Produto não encontrado")
+
+        Sale.query.filter_by(product_id=id).delete()
+
+        db.session.delete(product)
         db.session.commit()

@@ -12,26 +12,22 @@ class ProductController:
     @staticmethod
     def register_product():
 
-        # Dados enviados no formulário multipart/form-data
         name = request.form.get("name")
         price = request.form.get("price")
         qty = request.form.get("qty")
         seller_id = request.form.get("seller_id")
         image_file = request.files.get("image")
 
-        # Validação básica
         if not name or not price or not qty or not seller_id:
             return make_response(jsonify({"erro": "Campos obrigatórios faltando"}), 400)
 
         if not image_file:
             return make_response(jsonify({"erro": "Imagem é obrigatória"}), 400)
 
-        # Salvar arquivo da imagem
         filename = secure_filename(image_file.filename)
         image_path = os.path.join(UPLOAD_FOLDER, filename)
         image_file.save(image_path)
 
-        # URL pública da imagem
         image_url = f"/uploads/{filename}"
 
         try:
@@ -91,3 +87,11 @@ class ProductController:
             }))
         except Exception as e:
             return make_response(jsonify({"erro":str(e)}),400)
+        
+    @staticmethod
+    def delete_product(id):
+        try:
+            ProductService.delete_product(id)
+            return make_response(jsonify({"msg": "Produto removido com sucesso"}), 200)
+        except Exception as e:
+            return make_response(jsonify({"erro": str(e)}), 400)

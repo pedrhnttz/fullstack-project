@@ -72,6 +72,10 @@ def init_routes(app):
     @app.route('/products/deactivate/<name>', methods=['PUT'])
     def deactivate_product_route(name):
         return ProductController.deactivate_product(name)
+
+    @app.route('/products/<id>', methods=['DELETE'])
+    def delete_product_route(id):
+        return ProductController.delete_product(id)
     
     # S A L E S ###################################################################################
     
