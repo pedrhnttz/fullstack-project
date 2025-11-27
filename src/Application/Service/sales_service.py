@@ -17,7 +17,8 @@ class SaleService:
         sale = Sale(
             product_id=sale_data.product_id,
             sold_qty=sale_data.sold_qty,
-            price_at_sale=product.price
+            price_at_sale=product.price,
+            status=sale_data.status
         )
 
         product.total_sales += sold_qty
@@ -48,12 +49,14 @@ class SaleService:
 #PROVA FINAL
     def deactivate_sale(product_id):
         sale = Sale.query.filter_by(product_id=product_id)
+        product = Product.query.get(sale.product_id)
         if not sale:
             raise Exception("Venda não encontrada")
         if sale.status == "Deactivate":
             raise Exception("Venda já está desativada")
         else:
             sale.status = "Deactivate"
+        product.qty += sale.sold_qty
         db.session.commit()
 
     
