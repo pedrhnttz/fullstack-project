@@ -32,3 +32,13 @@ class SaleController:
     def get_sales_by_seller(seller_id):
         sales = SaleService.get_sales_by_seller(seller_id)
         return make_response(jsonify([sale.to_dict() for sale in sales]), 200)
+    
+    @staticmethod
+    def deactivate_sales(seller_id):
+        sales = SaleService.deactivate_product(seller_id)
+        return make_response(jsonify([sale.to_dict() for sale in sales]), 200)
+    
+    @staticmethod
+    def get_all_sales_deactivates(seller_id):
+        sales = SaleService.get_all_sales_deactivates(seller_id)
+        return make_response(jsonify([sale.to_dict() for sale in sales]), 200)

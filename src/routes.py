@@ -94,3 +94,14 @@ def init_routes(app):
     @app.route('/sales/sellerid/<seller_id>', methods=['GET'])
     def get_sales_by_seller_route(seller_id):
         return SaleController.get_sales_by_seller(seller_id)
+    
+    # INACTIVE SALE
+
+    @app.route('/sales/deactivate/<seller_id>', methods=['PUT'])
+    def deactivate_sale_route(seller_id):
+        SaleController.deactivate_sales(seller_id)
+    
+    #listagem vendas deactivates
+    @app.route('/sales/sellerid/<seller_id>', methods=['GET'])
+    def get_all_sales_deactivates_route(seller_id):
+        SaleController.get_all_sales_deactivates(seller_id)

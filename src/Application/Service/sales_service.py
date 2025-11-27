@@ -44,3 +44,22 @@ class SaleService:
             sales.extend(product.sales)
 
         return sales
+    
+#PROVA FINAL
+    def deactivate_sale(product_id):
+        sale = Sale.query.filter_by(product_id=product_id)
+        if not sale:
+            raise Exception("Venda não encontrada")
+        if sale.status == "Deactivate":
+            raise Exception("Venda já está desativada")
+        else:
+            sale.status = "Deactivate"
+        db.session.commit()
+
+    
+    def get_all_sales_deactivates(seller_id):
+        products = Product.query.filter_by(seller_id=seller_id, status = "Deactivate")
+        sales = []
+        for product in products:
+            sales.extend(product.sales)
+        return sales

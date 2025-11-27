@@ -7,6 +7,7 @@ class Sale(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
     sold_qty = db.Column(db.Integer, nullable=False)
     price_at_sale = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String, nullable=False, default="Active")
 
     product = db.relationship("Product", back_populates="sales")
 
@@ -15,5 +16,6 @@ class Sale(db.Model):
             "id": self.id,
             "product_id": self.product_id,
             "sold_qty": self.sold_qty,
-            "price_at_sale": self.price_at_sale
+            "price_at_sale": self.price_at_sale,
+            "status": self.status
         }
