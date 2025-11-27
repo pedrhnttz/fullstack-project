@@ -21,6 +21,7 @@ def init_db(app):
 
     os.environ["DATABASE_URL"] = DATABASE_URL
 
+    db.drop_all(app)
     db.init_app(app)
 
 
